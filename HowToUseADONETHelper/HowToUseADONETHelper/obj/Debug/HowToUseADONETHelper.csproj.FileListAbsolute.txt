@@ -1,0 +1,9 @@
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\HowToUseADONETHelper.exe.config
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\HowToUseADONETHelper.exe
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\HowToUseADONETHelper.pdb
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\ADONETHelper.dll
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\ADONETHelper.pdb
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\bin\Debug\ADONETHelper.xml
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\obj\Debug\HowToUseADONETHelper.csprojResolveAssemblyReference.cache
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\obj\Debug\HowToUseADONETHelper.exe
+C:\Users\support\Desktop\Zohar\HowToUseADONETHelper\HowToUseADONETHelper\obj\Debug\HowToUseADONETHelper.pdb

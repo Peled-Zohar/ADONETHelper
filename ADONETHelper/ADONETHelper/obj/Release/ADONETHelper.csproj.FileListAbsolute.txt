@@ -1,0 +1,5 @@
+C:\Users\support\Desktop\Zohar\ADONETHelper\ADONETHelper\bin\Release\ADONETHelper.dll
+C:\Users\support\Desktop\Zohar\ADONETHelper\ADONETHelper\bin\Release\ADONETHelper.pdb
+C:\Users\support\Desktop\Zohar\ADONETHelper\ADONETHelper\obj\Release\ADONETHelper.dll
+C:\Users\support\Desktop\Zohar\ADONETHelper\ADONETHelper\obj\Release\ADONETHelper.pdb
+C:\Users\support\Desktop\Zohar\ADONETHelper\ADONETHelper\bin\Release\ADONETHelper.XML

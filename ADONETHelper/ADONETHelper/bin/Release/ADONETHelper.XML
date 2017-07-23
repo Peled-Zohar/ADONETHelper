@@ -1,0 +1,609 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>ADONETHelper</name>
+    </assembly>
+    <members>
+        <member name="T:ADONETHelper.DBHelper`4">
+            <summary>
+            A base class for ADO.Net based data access layer, 
+            that encapsulates connection, command, and data adapters.
+            Enables quick and easy execution of major database operation:
+            ExecuteNonQuery, ExecuteScalar, 
+            Load data using a DataReader, DataSet or DataTable.
+            Also provides a shorten way to create and initialize parameters.
+            </summary>
+        </member>
+        <member name="T:ADONETHelper.IDBHelper">
+            <summary>
+            Represents the interface of a helper class for working with ADO.Net.
+            Supported clients: Odbc, OleDb and Sql.
+            Encapsulates connection, command, parameters and data adapters.
+            Enables quick and easy execution of major database operation:
+            ExecuteNonQuery, ExecuteScalar, 
+            Load data using a DataReader, DataSet or DataTable.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.ExecuteNonQuery(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL non-query statement (INSERT/UPDATE/DELETE).
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An integer value indication the number of rows effected by the SQL statement.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.ExecuteScalar``1(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Execute an SQL select statement that returns a single scalar value.
+            </summary>
+            <typeparam name="T">Data type of the value to return.</typeparam>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of T, or it's default.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.ExecuteReader(System.String,System.Data.CommandType,System.Func{System.Data.IDataReader,System.Boolean},System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement using an instance of a class that's implementing IDataReader.
+            Recommended use: Populating data objects.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="populate">A function to run that accepts an IDataReader and returns a boolean, to do the actuall population of the data object.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>The boolean value returned from the populate argument.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.FillDataSet(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement and returns it's results using a DataSet.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of the DataSet class with the results of the SQL query.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.FillDataTable(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement and returns it's results using a DataTable.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of the DataTable class with the results of the SQL query.</returns>
+            <remarks>
+            Note to inhreritors: Concrete DataAdapter might have an overload of the Fill method 
+            that works directly with a data table. You might want to use it instead of this method.
+            </remarks>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.Execute``1(System.String,System.Data.CommandType,System.Func{System.Data.IDbCommand,``0},System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL statement.
+            </summary>
+            <typeparam name="T">Data type of the value to return.</typeparam>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="function">A function to execute with the IDbCommand (i.e. Filling a DataTable).</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>The value returned from the function argument.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.CreateOutputParameter(System.String,ADONETHelper.ADONETType,System.Int32)">
+            <summary>
+            Creates an output parameter with the specified name, type and size.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="size">The size of the parameter.</param>
+            <returns>An output parameter with the specified name, type and size.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.CreateOutputParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates an output parameter with the specified name and type.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>An output parameter with the specified name and type.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.CreateParameter(System.String,ADONETHelper.ADONETType,System.Object)">
+            <summary>
+            Creates an input parameter with the specified name, type and value.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <returns>An input parameter with the specified name, type and value</returns>
+        </member>
+        <member name="M:ADONETHelper.IDBHelper.CreateParameter(System.String,ADONETHelper.ADONETType,System.Int32,System.Object)">
+            <summary>
+            Creates an input parameter with the specified name, type, size and value.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="size">The size of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.#ctor(System.String)">
+            <summary>
+            Initializes the connection string needed to connect to the database.
+            Inheritors must call this constractor with the proper connection string.
+            </summary>
+            <param name="connectionString">The connection string to the database.</param>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.ExecuteNonQuery(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL non-query statement (INSERT/UPDATE/DELETE).
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An integer value indication the number of rows effected by the SQL statement.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.ExecuteScalar``1(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Execute an SQL select statement that returns a single scalar value.
+            </summary>
+            <typeparam name="T">Data type of the value to return.</typeparam>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of T, or it's default.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.ExecuteReader(System.String,System.Data.CommandType,System.Func{System.Data.IDataReader,System.Boolean},System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement using an instance of a class that's implementing IDataReader.
+            Recommended use: Populating data objects.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="populate">A function to run that accepts an IDataReader and returns a boolean, to do the actuall population of the data object.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>The boolean value returned from the populate argument.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.FillDataSet(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement and returns it's results using a DataSet.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of the DataSet class with the results of the SQL query.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.FillDataTable(System.String,System.Data.CommandType,System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL Select statement and returns it's results using a DataTable.
+            </summary>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>An instance of the DataTable class with the results of the SQL query.</returns>
+            <remarks>
+            Note to inhreritors: Concrete DataAdapter might have an overload of the Fill method 
+            that works directly with a data table. You might want to use it instead of this method.
+            </remarks>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.Execute``1(System.String,System.Data.CommandType,System.Func{System.Data.IDbCommand,``0},System.Data.IDbDataParameter[])">
+            <summary>
+            Executes an SQL statement.
+            </summary>
+            <typeparam name="T">Data type of the value to return.</typeparam>
+            <param name="sql">SQL statement to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="function">A function to execute with the IDbCommand (i.e. Filling a DataTable).</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns>The value returned from the function argument.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.CreateOutputParameter(System.String,ADONETHelper.ADONETType,System.Int32)">
+            <summary>
+            Creates an output parameter with the specified name, type and size.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="size">The size of the parameter.</param>
+            <returns>An output parameter with the specified name, type and size.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.CreateOutputParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates an output parameter with the specified name and type.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>An output parameter with the specified name and type.</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.CreateParameter(System.String,ADONETHelper.ADONETType,System.Object)">
+            <summary>
+            Creates an input parameter with the specified name, type and value.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <returns>An input parameter with the specified name, type and value</returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.CreateParameter(System.String,ADONETHelper.ADONETType,System.Int32,System.Object)">
+            <summary>
+            Creates an input parameter with the specified name, type, size and value.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <param name="size">The size of the parameter.</param>
+            <param name="value">The value of the parameter.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ADONETHelper.DBHelper`4.CreateParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates an instance of TParameter with the specified name and type.
+            </summary>
+            <param name="name">The name of the parameter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>An instance of TParameter with the specified name and type.</returns>
+        </member>
+        <member name="T:ADONETHelper.DataBaseType">
+            <summary>
+            Used by the GetInstance factory method to return the concrete implementation of IDBHelper.
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.DataBaseType.SQLServer">
+            <summary>
+            SQL Server implementation.
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.DataBaseType.OleDb">
+            <summary>
+            OleDb implementation.
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.DataBaseType.Odbc">
+            <summary>
+            Odbc implementation.
+            </summary>
+        </member>
+        <member name="T:ADONETHelper.DBHelperFactory">
+            <summary>
+            A factory class responsible of creating an instance of a class that implements IDBHelper.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.DBHelperFactory.GetInstance(ADONETHelper.DataBaseType,System.String)">
+            <summary>
+            Creates and returns an instance of a class that implements IDBHelper.
+            </summary>
+            <param name="type">A member of the DataBaseType enum.</param>
+            <param name="connectionString">The connection string used to connect to the database.</param>
+            <returns>An instance of a class that implements IDBHelper.</returns>
+        </member>
+        <member name="T:ADONETHelper.ADONETType">
+            <summary>
+            Represents a common enum of parameters data type for all supported ADO.Net clients.
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Boolean">
+            <summary>
+            (DbType.Boolean, SqlDbType.Bit, OleDbType.Boolean, OdbcType.Bit)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Byte">
+            <summary>
+            (DbType.Byte, SqlDbType.TinyInt, OleDbType.UnsignedTinyInt , OdbcType.TinyInt)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Binary">
+            <summary>
+            (DbType.Binary, SqlDbType.Binary, OleDbType.VarBinary, OdbcType.VarBinary)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Char">
+            <summary>
+            (DbType.AnsiStringFixedLength, SqlDbType.Char, OleDbType.Char, OdbcType.Char)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Date">
+            <summary>
+            (DbType.Date, SqlDbType.Date, OleDbType.DBDate, OdbcType.Date)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.DateTime">
+            <summary>
+            (DbType.DateTime, SqlDbType.DateTime, OleDbType.DBTimeStamp, OdbcType.DateTime)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.DateTime2">
+            <summary>
+            (DbType.DateTime2, SqlDbType.DateTime2, OleDbType - N/A, OdbcType - N/A),
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.DateTimeOffset">
+            <summary>
+            (DbType.DateTimeOffset, SqlDbType.DateTimeOffset, OleDbType - N/A, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Decimal">
+            <summary>
+            (DbType.Decimal, SqlDbType.Decimal, OleDbType.Decimal, OdbcType.Decimal)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Double">
+            <summary>
+            (DbType.Double, SqlDbType.Float , OleDbType.Double, OdbcType.Double)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Single">
+            <summary>
+            (DbType.Single, SqlDbType.Real, OleDbType.Single, OdbcType.Real)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Guid">
+            <summary>
+            (DbType.Guid, SqlDbType.UniqueIdentifier, OleDbType.Guid, OdbcType.UniqueIdentifier)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.SmallInt">
+            <summary>
+            (DbType.Int16, SqlDbType.SmallInt, OleDbType.SmallInt, OdbcType.SmallInt)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Int">
+            <summary>
+            (DbType.Int32, SqlDbType.Int, OleDbType.Integer, OdbcType.Int)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.BigInt">
+            <summary>
+            (DbType.Int64, SqlDbType.BigInt, OleDbType.BigInt, OdbcType.BigInt)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Object">
+            <summary>
+            (DbType.Object, SqlDbType.Variant, OleDbType.Variant, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.NChar">
+            <summary>
+            (DbType.StringFixedLength, SqlDbType.NChar, OleDbType.WChar, OdbcType.NChar)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.NVarChar">
+            <summary>
+            (DbType.String, SqlDbType.NVarChar, OleDbType.VarWChar, OdbcType.NVarChar)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.VarBinary">
+            <summary>
+            (DbType.Binary, SqlDbType.VarBinary, OleDbType.VarBinary, OdbcType.VarBinary)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.VarChar">
+            <summary>
+            (DbType.AnsiString, SqlDbType.VarChar, OleDbType.VarChar, OdbcType.VarChar)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Structured">
+            <summary>
+            (DbType - N/A, SqlDbType.Structured, OleDbType - N/A, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Time">
+            <summary>
+            (DbType.Time, SqlDbType.Time, OleDbType.DBTime, OdbcType.Time)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.UInt16">
+            <summary>
+            (DbType.UInt16, SqlDbType - N/A, OleDbType.UnsignedSmallInt, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.UInt32">
+            <summary>
+            (DbType.UInt32, SqlDbType - N/A, OleDbType.UnsignedInt, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.UInt64">
+            <summary>
+            (DbType.UInt64, SqlDbType - N/A, OleDbType.UnsignedBigInt, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Xml">
+            <summary>
+            (DbType.Xml, SqlDbType.Xml, OleDbType - N/A, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Currency">
+            <summary>
+            (DbType.Currency, SqlDbType.Money, OleDbType.Currency, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Image">
+            <summary>
+            (DbType - N/A, SqlDbType.Image, OleDbType.LongVarBinary, OdbcType.Image)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.NText">
+            <summary>
+            (DbType - N/A, SqlDbType.NText, OleDbType.LongVarWChar, OdbcType.NText)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Text">
+            <summary>
+            (DbType - N/A, SqlDbType.Text, OleDbType.LongVarChar, OdbcType.Text)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.SmallDateTime">
+            <summary>
+            (DbType - N/A, SqlDbType.SmallDateTime, OleDbType.Date, OdbcType.SmallDateTime)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Timestamp">
+            <summary>
+            (DbType - N/A, SqlDbType.Timestamp, OleDbType - N/A, OdbcType.Timestamp)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.SByte">
+            <summary>
+            (DbType.SByte, SqlDbType - N/A, OleDbType.TinyInt, OdbcType.TinyInt)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.SmallMoney">
+            <summary>
+            (DbType - N/A, SqlDbType.SmallMoney, OleDbType - N/A, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.Udt">
+            <summary>
+            (DbType - N/A, SqlDbType.Udt, OleDbType - N/A, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="F:ADONETHelper.ADONETType.VarNumeric">
+            <summary>
+            (DbType.VarNumeric, SqlDbType - N/A, OleDbType.VarNumeric, OdbcType - N/A)
+            </summary>
+        </member>
+        <member name="T:ADONETHelper.IDbDataParameterExtensions">
+            <summary>
+            Provides extensions for IDbDataParameter to help get the parameters and values in client code.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.IDbDataParameterExtensions.GetValueOrDefault``1(System.Data.IDbDataParameter)">
+            <summary>
+            Gets the value of the parameter, or default(T) if the parameter's value is null or DBNull.
+            </summary>
+            <typeparam name="T">The type of the value of the parameter.</typeparam>
+            <param name="parameter">The parameter.</param>
+            <returns>The value of the parameter as T, or default(T) if it's value is null or DBNull.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDbDataParameterExtensions.GetValueOrDefault``1(System.Data.IDbDataParameter,``0)">
+            <summary>
+            Gets the value of the parameter, or defaultValue if the parameters value is null or DBNull.
+            </summary>
+            <typeparam name="T">The type of the value of the parameter.</typeparam>
+            <param name="parameter">The parameter.</param>
+            <param name="defaultValue">A value of type T that will be returned if the parameter's value is null or DBNull.</param>
+            <returns>The value of the parameter as T, or defaultValue if it's value is null or DBNull.</returns>
+        </member>
+        <member name="T:ADONETHelper.IDataReaderExtensions">
+            <summary>
+            Provides extension methods for IDataReader.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.IDataReaderExtensions.GetValueOrDefault``1(System.Data.IDataReader,System.Int32)">
+            <summary>
+            Gets the value of type T from the column specified by the index parameter, or default(T) if it's null.
+            </summary>
+            <typeparam name="T">The type of the value to get.</typeparam>
+            <param name="reader">An instance of a class implementing IDataReader.</param>
+            <param name="index">The index of the column from where to get the value.</param>
+            <returns>The value of type T from the specified column, default(T) if null.</returns>
+        </member>
+        <member name="M:ADONETHelper.IDataReaderExtensions.GetValueOrDefault``1(System.Data.IDataReader,System.String)">
+            <summary>
+            Gets the value of type T from the column specified by the name parameter, or default(T) if it's null.
+            </summary>
+            <typeparam name="T">The type of the value to get.</typeparam>
+            <param name="reader">An instance of a class implementing IDataReader.</param>
+            <param name="name">The name of the column from where to get the value.</param>
+            <returns>The value of type T from the specified column, default(T) if null.</returns>
+        </member>
+        <member name="T:ADONETHelper.OdbcDBHelper">
+            <summary>
+            An implementation of IDBHelper to be used with Odbc databases.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.OdbcDBHelper.#ctor(System.String)">
+            <summary>
+            Initializes the connection string needed to connect to the database.
+            Inheritors must call this constractor with the proper connection string.
+            </summary>
+            <param name="connectionString">The connection string to the database.</param>
+        </member>
+        <member name="M:ADONETHelper.OdbcDBHelper.CreateParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates a new instance of the OdbcParameter class.
+            </summary>
+            <param name="name">The name of the paramenter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>A new instance of OdbcParameter with the specified name and type.</returns>
+        </member>
+        <member name="T:ADONETHelper.OleDbDBHelper">
+            <summary>
+            An implementation of IDBHelper to be used with OleDb databases.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.OleDbDBHelper.#ctor(System.String)">
+            <summary>
+            Initializes the connection string needed to connect to the database.
+            Inheritors must call this constractor with the proper connection string.
+            </summary>
+            <param name="connectionString">The connection string to the database.</param>
+        </member>
+        <member name="M:ADONETHelper.OleDbDBHelper.CreateParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates a new instance of the OleDbParameter class.
+            </summary>
+            <param name="name">The name of the paramenter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>A new instance of OleDbParameter with the specified name and type.</returns>
+        </member>
+        <!-- Badly formed XML comment ignored for member "T:ADONETHelper.ParametersCollectionExtensions" -->
+        <member name="M:ADONETHelper.ParametersCollectionExtensions.GetByName(System.Collections.Generic.IEnumerable{System.Data.IDbDataParameter},System.String)">
+            <summary>
+            Returns the instance of IDbDataParameter with the specified name.
+            </summary>
+            <param name="parameters">The parameters collection to search.</param>
+            <param name="name">The name of the parameter.</param>
+            <returns>The instance of IDbDataParameter with the specified name.</returns>
+        </member>
+        <member name="M:ADONETHelper.ParametersCollectionExtensions.GetValue(System.Collections.Generic.IEnumerable{System.Data.IDbDataParameter},System.String)">
+            <summary>
+            Gets the value of the parameter with the specified name.
+            </summary>
+            <param name="parameters">The parameters collection to search.</param>
+            <param name="name">The name of the parameter.</param>
+            <returns>An instance of the Object class that is the value of the parameter.</returns>
+        </member>
+        <member name="M:ADONETHelper.ParametersCollectionExtensions.GetValueOrDefault``1(System.Collections.Generic.IEnumerable{System.Data.IDbDataParameter},System.String)">
+            <summary>
+            Gets the value of the parameter with the specified name, or default(T) if the parameter is not found or it's value is null or DBNull.
+            </summary>
+            <typeparam name="T">The type of the value of the parameter.</typeparam>
+            <param name="parameters">The parameters collection to search.</param>
+            <param name="name">The name of the parameter.</param>
+            <returns>The value of the parameter as T, or default(T) if not found or it's value is null or DBNull.</returns>
+        </member>
+        <member name="M:ADONETHelper.ParametersCollectionExtensions.GetValueOrDefault``1(System.Collections.Generic.IEnumerable{System.Data.IDbDataParameter},System.String,``0)">
+            <summary>
+            Gets the value of the parameter with the specified name, or defaultValue if the parameter is not found or it's value is null or DBNull.
+            </summary>
+            <typeparam name="T">The type of the value of the parameter.</typeparam>
+            <param name="parameters">The parameters collection to search.</param>
+            <param name="name">The name of the parameter.</param>
+            <param name="defaultValue">A value of type T that will be returned if the parameter is not found or it's value is null or DBNull.</param>
+            <returns>The value of the parameter as T, or defaultValue if not found or it's value is null or DBNull.</returns>
+        </member>
+        <member name="T:ADONETHelper.SQLDBHelper">
+            <summary>
+            An implementation of IDBHelper to be used with SQL Server database.
+            </summary>
+        </member>
+        <member name="M:ADONETHelper.SQLDBHelper.#ctor(System.String)">
+            <summary>
+            Initializes the connection string needed to connect to the database.
+            Inheritors must call this constractor with the proper connection string.
+            </summary>
+            <param name="connectionString">The connection string to the database.</param>
+        </member>
+        <member name="M:ADONETHelper.SQLDBHelper.FillDataTable(System.String,System.Data.CommandType,System.Data.SqlClient.SqlParameter[])">
+            <summary>
+            Fills a DataTable with the results of an SQL query.
+            </summary>
+            <param name="sql">SQL query to execute.</param>
+            <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
+            <param name="parameters">Parameters of the SQL statement.</param>
+            <returns></returns>
+        </member>
+        <member name="M:ADONETHelper.SQLDBHelper.CreateParameter(System.String,ADONETHelper.ADONETType)">
+            <summary>
+            Creates a new instance of the SqlParameter class.
+            </summary>
+            <param name="name">The name of the paramenter.</param>
+            <param name="type">The type of the parameter.</param>
+            <returns>A new instance of SqlParameter with the specified name and type.</returns>
+        </member>
+    </members>
+</doc>
