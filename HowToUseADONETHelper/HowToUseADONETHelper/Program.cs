@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -50,13 +50,13 @@ namespace HowToUseADONETHelper
         private static void InitializeDBHelper()
         {
             var connectionString = ConfigurationManager.ConnectionStrings["connectionString"].ConnectionString;
-            _DB = DBHelperFactory.GetInstance(DataBaseType.SQLServer, connectionString);
+            IDBHelper _DB = DBHelperFactory.GetInstance(DataBaseType.SQLServer, connectionString);
         }
 
         /// <summary>
         /// Executes an insert statement with multiple parameters.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>An int representing the number of rows effected.</returns>
         private static int ExecuteNonQuery()
         {
             var sql = "INSERT INTO MyTable(Col1, Col2) VALUES(@val1, @val2)";
@@ -89,7 +89,7 @@ namespace HowToUseADONETHelper
             {
                 returnValue = _DB.ExecuteScalar<string>(sql, System.Data.CommandType.Text);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 // Exception handling code goes here...
             }
@@ -122,10 +122,11 @@ namespace HowToUseADONETHelper
         /// <summary>
         /// Executes a datareader, uses an anonymous method to populate a list of persons.
         /// </summary>
+        /// <returns>A list of Persons.</returns>
         private static List<Person> ExecuteReaderAnonymousPopulator()
         {
             var people = new List<Person>();
-            var sql = "SELECT First_Name, Last_Name, Age FROM Persons WHERE";
+            var sql = "SELECT First_Name, Last_Name, Age FROM Persons";
             try
             {
                 _DB.ExecuteReader
@@ -148,6 +149,10 @@ namespace HowToUseADONETHelper
                         return false;
                     }
                 );
+
+
+
+
             }
             catch (Exception e)
             {
@@ -159,10 +164,11 @@ namespace HowToUseADONETHelper
         /// <summary>
         /// Executes a datareader, uses a named method to populate a list of persons.
         /// </summary>
+        /// <returns>A list of Persons.</returns>
         private static List<Person> ExecuteReader()
         {
             var people = new List<Person>();
-            var sql = "SELECT First_Name, Last_Name, Age FROM Persons WHERE";
+            var sql = "SELECT First_Name, Last_Name, Age FROM Persons";
             try
             {
                 _DB.ExecuteReader
@@ -171,7 +177,7 @@ namespace HowToUseADONETHelper
                     CommandType.Text,
                     (reader) => PopulatePersonsList(reader, people)
                 );
-                  
+
             }
             catch (Exception e)
             {
@@ -185,7 +191,7 @@ namespace HowToUseADONETHelper
         /// </summary>
         /// <param name="reader">An instance of IDataReader</param>
         /// <param name="people">The list of persons to populate.</param>
-        /// <returns></returns>
+        /// <returns>True if found records, false otherwise.</returns>
         private static bool PopulatePersonsList(IDataReader reader, List<Person> people)
         {
             var recordsFound = false;
@@ -199,7 +205,7 @@ namespace HowToUseADONETHelper
                     Age = reader.GetValueOrDefault<int>("Age")
                 }
                 );
-                recordsFound  = true;
+                recordsFound = true;
             }
             return recordsFound;
         }
@@ -222,6 +228,30 @@ namespace HowToUseADONETHelper
             person.FirstName = parameters.GetValueOrDefault<string>("@FirstName");
             person.LastName = parameters.GetValueOrDefault<string>("@LastName");
         }
+
+
+        /// <summary>
+        /// Executes a stored procedure with input and output parameters.
+        /// </summary>
+        /// <param name="id">The id of the person.</param>
+        /// <returns>An instance of the Person class.</returns>
+        private static Person ExecuteNonQueryWithOutputParameters(int id)
+        {
+            var person = new Person();
+            var parameters = new IDbDataParameter[]
+        {
+            _DB.CreateOutputParameter("@Age", ADONETType.Int),
+            _DB.CreateOutputParameter("@FirstName", ADONETType.NVarChar, 4000),
+            _DB.CreateOutputParameter("@LastName", ADONETType.NVarChar, 4000),
+            _DB.CreateParameter("@Id", ADONETType.Int, id)
+        };
+            _DB.ExecuteNonQuery("stp_GetPersonDetailsById", CommandType.StoredProcedure, parameters);
+            person.Age = parameters.GetValueOrDefault<int>("@Age");
+            person.FirstName = parameters.GetValueOrDefault<string>("@FirstName");
+            person.LastName = parameters.GetValueOrDefault<string>("@LastName");
+            return person;
+        }
+
     }
 
     /// <summary>
@@ -235,3 +265,5 @@ namespace HowToUseADONETHelper
         public string LastName { get; set; }
     }
 }
+
+
