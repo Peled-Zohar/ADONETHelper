@@ -63,10 +63,6 @@ namespace ADONETHelper
         /// <param name="commandType">One of the Sql.Data.CommandType values. The default is Text.</param>
         /// <param name="parameters">Parameters of the SQL statement.</param>
         /// <returns>An instance of the DataTable class with the results of the SQL query.</returns>
-        /// <remarks>
-        /// Note to inhreritors: Concrete DataAdapter might have an overload of the Fill method 
-        /// that works directly with a data table. You might want to use it instead of this method.
-        /// </remarks>
         DataTable FillDataTable(string sql, CommandType commandType, params IDbDataParameter[] parameters);
 
         /// <summary>
@@ -103,7 +99,7 @@ namespace ADONETHelper
         /// <param name="name">The name of the parameter.</param>
         /// <param name="type">The type of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <returns>An input parameter with the specified name, type and value</returns>
+        /// <returns>An input parameter with the specified name, type and value.</returns>
         IDbDataParameter CreateParameter(string name, ADONETType type, object value);
 
         /// <summary>
@@ -113,7 +109,7 @@ namespace ADONETHelper
         /// <param name="type">The type of the parameter.</param>
         /// <param name="size">The size of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <returns></returns>
+        /// <returns>An input parameter with the specified name, type, size and value.</returns>
         IDbDataParameter CreateParameter(string name, ADONETType type, int size, object value);
         
     }
