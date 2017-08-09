@@ -208,7 +208,7 @@ namespace ADONETHelper
 
         #endregion public methods
 
-        #region protected methods
+        #region private methods
         
         private DataSet FillDataSet(IDbCommand command)
         {
