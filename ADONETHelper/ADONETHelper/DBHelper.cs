@@ -139,10 +139,7 @@ namespace ADONETHelper
                     cmd.CommandType = commandType;
                     if (parameters.Length > 0)
                     {
-                        foreach (var parameter in parameters)
-                        {
-                            cmd.Parameters.Add(parameter);
-                        }
+                        cmd.Parameters.AddRange(parameters);
                     }
                     con.Open();
                     return function(cmd);
